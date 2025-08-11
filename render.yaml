@@ -1,0 +1,22 @@
+services:
+  - name: blue-traders-backend
+    type: web
+    runtime: node
+    repo: https://github.com/Domicile91/The-blues
+    branch: main
+    rootDir: backend
+    buildCommand: yarn install
+    startCommand: yarn start
+    envVars:
+      - key: JPESA_API_KEY
+        sync: false
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://https://thebluetraders.com/
+    autoDeploy: true
+    plan: standard
+    region: oregon
+    staticOutboundIPs: true
+    privateNetwork: true
+    healthCheckPath: /healthz
