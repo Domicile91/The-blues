@@ -20,3 +20,11 @@ services:
     staticOutboundIPs: true
     privateNetwork: true
     healthCheckPath: /healthz
+    services:
+  - type: web
+    name: the-blues-1
+    env: node
+    rootDir: backend
+    buildCommand: yarn install
+    startCommand: yarn start
+
