@@ -13,7 +13,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: FRONTEND_URL
-        value: https://https://thebluetraders.com/
+        value: https://thebluetraders.com/
     autoDeploy: true
     plan: standard
     region: oregon
