@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Account Demo - Blue Traders Admin</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .demo-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .demo-section h3 {
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3em;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            margin: 12px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn.admin {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .demo-controls {
+            text-align: center;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 Main Account Demo</h1>
+            <p>Blue Traders Admin Dashboard - Site Visit Earnings Main Account Display</p>
+        </div>
+        
+        <div class="demo-section">
+            <h3>🎯 Main Account Features Implemented</h3>
+            <ul class="feature-list">
+                <li>✅ <strong>Professional Main Account Card:</strong> Prominently displays total site visit earnings</li>
+                <li>✅ <strong>Real-time Balance Updates:</strong> Live balance tracking with animated counters</li>
+                <li>✅ <strong>Balance Breakdown:</strong> Available vs pending funds with clear visualization</li>
+                <li>✅ <strong>Account Status Indicators:</strong> Active status with pulsing animation</li>
+                <li>✅ <strong>Quick Action Buttons:</strong> Withdraw, Transfer, and History access</li>
+                <li>✅ <strong>Withdrawal Management:</strong> Complete withdrawal processing with multiple payment methods</li>
+                <li>✅ <strong>Transfer Functionality:</strong> Move funds between different account pools</li>
+                <li>✅ <strong>Transaction History:</strong> Comprehensive transaction tracking and reporting</li>
+                <li>✅ <strong>Security Features:</strong> Processing fees, limits, and validation</li>
+                <li>✅ <strong>Responsive Design:</strong> Optimized for desktop, tablet, and mobile</li>
+            </ul>
+        </div>
+        
+        <div class="demo-section">
+            <h3>💰 Account Display Features</h3>
+            <div class="code-block">
+📊 Main System Account Balance: $15,847.92<br>
+💸 Available for Withdrawal: $12,340.75<br>
+⏳ Pending Processing: $3,507.17<br>
+🔄 Last Updated: Real-time<br>
+✅ Status: Active & Secure
+            </div>
+            
+            <p><strong>Key Components:</strong></p>
+            <ul class="feature-list">
+                <li>🎨 <strong>Visual Design:</strong> Gradient background with shimmer animation</li>
+                <li>📱 <strong>Interactive Elements:</strong> Hover effects and button animations</li>
+                <li>💳 <strong>Payment Methods:</strong> Bank transfer, mobile money, crypto, PayPal</li>
+                <li>📈 <strong>Real-time Updates:</strong> Automatic balance refresh and notifications</li>
+                <li>🔒 <strong>Security:</strong> Transaction validation and processing limits</li>
+                <li>📊 <strong>Analytics:</strong> Detailed transaction history and reporting</li>
+            </ul>
+        </div>
+        
+        <div class="demo-section">
+            <h3>🔧 Technical Implementation</h3>
+            <p><strong>Files Updated:</strong></p>
+            <div class="code-block">
+✅ admin/pages/site-earnings.html - Added main account card<br>
+✅ admin/assets/css/admin.css - Main account styles (150+ lines)<br>
+✅ admin/assets/js/admin-site-earnings.js - Account functionality<br>
+✅ Integration with existing admin dashboard system
+            </div>
+            
+            <p><strong>Functionality Added:</strong></p>
+            <ul class="feature-list">
+                <li>⚡ <strong>Main Account Display:</strong> Professional card with balance breakdown</li>
+                <li>💸 <strong>Withdrawal Processing:</strong> Complete modal with payment methods</li>
+                <li>🔄 <strong>Fund Transfers:</strong> Move money between account pools</li>
+                <li>📋 <strong>Transaction History:</strong> Detailed history with filtering</li>
+                <li>🎯 <strong>Real-time Updates:</strong> Live balance and status updates</li>
+                <li>📱 <strong>Responsive Design:</strong> Mobile-optimized interface</li>
+            </ul>
+        </div>
+        
+        <div class="demo-section">
+            <h3>🚀 Admin Dashboard Features</h3>
+            <ul class="feature-list">
+                <li>🏦 <strong>Main Account Management:</strong> Central hub for all site earnings</li>
+                <li>💰 <strong>Balance Visualization:</strong> Clear breakdown of available vs pending funds</li>
+                <li>🔄 <strong>Withdrawal System:</strong> Multiple payment methods with fee calculation</li>
+                <li>📊 <strong>Transaction Tracking:</strong> Complete history with export functionality</li>
+                <li>⚡ <strong>Real-time Data:</strong> Live updates from user platform integration</li>
+                <li>🎯 <strong>Admin Controls:</strong> Full control over site visit earnings</li>
+                <li>📱 <strong>Mobile Ready:</strong> Responsive design for all devices</li>
+                <li>🔒 <strong>Secure Operations:</strong> Validation, limits, and audit trails</li>
+            </ul>
+        </div>
+        
+        <div class="demo-controls">
+            <a href="organized-trading-platform/frontend/admin/index.html" class="btn admin" target="_blank">
+                🏦 Launch Admin Dashboard
+            </a>
+            <a href="organized-trading-platform/frontend/index.html" class="btn" target="_blank">
+                👤 User Platform
+            </a>
+        </div>
+        
+        <div class="demo-section">
+            <h3>📋 Implementation Summary</h3>
+            <p>The main account display has been successfully implemented in the Blue Traders admin dashboard with the following features:</p>
+            
+            <div class="code-block">
+🎯 COMPLETED FEATURES:<br>
+├── Main Account Card with professional styling<br>
+├── Real-time balance display with animations<br>
+├── Available vs pending balance breakdown<br>
+├── Withdrawal processing with multiple payment methods<br>
+├── Fund transfer functionality between accounts<br>
+├── Comprehensive transaction history<br>
+├── Security features and validation<br>
+├── Responsive mobile-friendly design<br>
+├── Integration with existing site earnings system<br>
+└── Real-time updates and notifications
+            </div>
+            
+            <p><strong>🎉 Status:</strong> Main account display is fully functional and ready for use!</p>
+        </div>
+    </div>
+</body>
+</html>

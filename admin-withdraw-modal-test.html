@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Withdraw Modal - Test Page</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/modals.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .test-header {
+            background: linear-gradient(135deg, #3949ab 0%, #5c6bc0 100%);
+            color: #fff;
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .test-body {
+            padding: 32px;
+        }
+        
+        .test-section {
+            margin-bottom: 32px;
+            padding: 24px;
+            border: 1px solid #e0e6ed;
+            border-radius: 8px;
+            background: #f8f9ff;
+        }
+        
+        .test-section h3 {
+            margin: 0 0 16px 0;
+            color: #3949ab;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .test-btn.primary {
+            background: linear-gradient(135deg, #3949ab 0%, #5c6bc0 100%);
+            color: #fff;
+        }
+        
+        .test-btn.admin {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: #fff;
+        }
+        
+        .test-btn.user {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+            color: #fff;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .status-display {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 6px;
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 500;
+            z-index: 3000;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🏦 Enhanced Withdraw Modal - Test Page</h1>
+            <p>Test the admin/user context-aware withdraw functionality</p>
+        </div>
+        
+        <div class="test-body">
+            <div class="test-section">
+                <h3>🔧 Test Controls</h3>
+                <div class="test-buttons">
+                    <button class="test-btn admin" onclick="setAdminMode()">👨‍💼 Set Admin Mode</button>
+                    <button class="test-btn user" onclick="setUserMode()">👤 Set User Mode</button>
+                    <button class="test-btn primary" onclick="openWithdrawModal()">💰 Open Withdraw Modal</button>
+                </div>
+                <div class="status-display" id="statusDisplay">
+                    Ready to test - Click "Set Admin Mode" or "Set User Mode" first
+                </div>
+            </div>
+            
+            <div class="test-section">
+                <h3>✨ Features Being Tested</h3>
+                <ul>
+                    <li><strong>Admin Context:</strong> Shows "Main System Account" and "Site Visit Earnings" options</li>
+                    <li><strong>User Context:</strong> Shows user's personal accounts</li>
+                    <li><strong>Payment Methods:</strong> Interactive selection with visual feedback</li>
+                    <li><strong>Form Validation:</strong> Minimum amounts and required fields</li>
+                    <li><strong>Processing Simulation:</strong> Realistic withdrawal processing</li>
+                </ul>
+            </div>
+            
+            <div class="test-section">
+                <h3>📋 Expected Behavior</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h4 style="color: #ff9800;">👨‍💼 Admin Mode</h4>
+                        <ul>
+                            <li>Account dropdown shows system accounts</li>
+                            <li>Minimum withdrawal: $50</li>
+                            <li>Special processing for admin accounts</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #4caf50;">👤 User Mode</h4>
+                        <ul>
+                            <li>Account dropdown shows user accounts</li>
+                            <li>Minimum withdrawal: $10</li>
+                            <li>Standard user processing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Container -->
+    <div id="modalContainer"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/app.js"></script>
+    
+    <script>
+        // Initialize test environment
+        let app;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create a simplified app instance for testing
+            app = new TradingPlatform();
+            
+            // Add some demo accounts for testing
+            app.accounts = [
+                { number: 'ACC001', type: 'Trading', balance: '5000.00' },
+                { number: 'ACC002', type: 'Savings', balance: '15000.00' },
+                { number: 'ACC003', type: 'Investment', balance: '25000.00' }
+            ];
+            
+            updateStatus('Test environment ready');
+        });
+        
+        function setAdminMode() {
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('userRole', 'admin');
+            localStorage.setItem('currentUser', JSON.stringify({
+                role: 'admin',
+                fullName: 'Admin User',
+                email: 'admin@bluetraders.com'
+            }));
+            
+            app.currentUser = { role: 'admin', fullName: 'Admin User' };
+            updateStatus('🔧 Admin mode activated - Admin can withdraw from system accounts');
+        }
+        
+        function setUserMode() {
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('userRole', 'user');
+            localStorage.setItem('currentUser', JSON.stringify({
+                role: 'user',
+                fullName: 'Test User',
+                email: 'user@bluetraders.com'
+            }));
+            
+            app.currentUser = { role: 'user', fullName: 'Test User' };
+            updateStatus('👤 User mode activated - User can withdraw from personal accounts');
+        }
+        
+        function openWithdrawModal() {
+            if (!app.currentUser) {
+                showNotification('Please set Admin or User mode first', 'error');
+                return;
+            }
+            
+            app.loadWithdrawPage();
+            showNotification(`Withdraw modal opened in ${app.currentUser.role} mode`, 'info');
+        }
+        
+        function updateStatus(message) {
+            const statusDisplay = document.getElementById('statusDisplay');
+            statusDisplay.textContent = message;
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Override app's showNotification method to use our custom one
+        setTimeout(() => {
+            if (app) {
+                app.showNotification = showNotification;
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

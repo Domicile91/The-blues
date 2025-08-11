@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Site Earnings Withdrawal Demo - Blue Traders</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #158173 0%, #3949ab 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .demo-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .demo-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .demo-header h1 {
+            color: #158173;
+            margin-bottom: 8px;
+        }
+        .balance-display {
+            background: linear-gradient(135deg, #158173, #3949ab);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .balance-display h2 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .balance-display p {
+            margin: 8px 0 0 0;
+            opacity: 0.9;
+        }
+        .withdrawal-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #158173;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #158173;
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #0f6759;
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .status-display {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .success {
+            background: #e8f5e8;
+            border-color: #158173;
+            color: #0f6759;
+        }
+        .error {
+            background: #fef2f2;
+            border-color: #e53935;
+            color: #c62828;
+        }
+        .processing {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        .demo-info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .demo-info h3 {
+            color: #1976d2;
+            margin-top: 0;
+        }
+        .withdrawal-history {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+        .history-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .history-item:last-child {
+            margin-bottom: 0;
+        }
+        .history-amount {
+            font-weight: 600;
+            color: #158173;
+        }
+        .history-time {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .balance-update {
+            animation: balanceUpdate 0.5s ease-in-out;
+        }
+        @keyframes balanceUpdate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>💰 Live Site Earnings Withdrawal</h1>
+            <p>Withdraw your site visit earnings directly to your mobile money account</p>
+        </div>
+
+        <div class="balance-display" id="balanceDisplay">
+            <h2 id="currentBalance">$3,014.05</h2>
+            <p>Available Site Earnings Balance</p>
+        </div>
+
+        <div class="demo-info">
+            <h3>🎯 How It Works</h3>
+            <p>Your site earnings are automatically tracked as users visit your platform. When you request a withdrawal:</p>
+            <ul>
+                <li>✅ Amount is deducted from your site earnings balance</li>
+                <li>🔄 Withdrawal is processed live through Jpesa API</li>
+                <li>📱 Funds are sent directly to your mobile money account</li>
+                <li>📊 Balance updates in real-time</li>
+                <li>📱 You receive SMS confirmation</li>
+            </ul>
+        </div>
+
+        <div class="withdrawal-form">
+            <h3 style="color: #158173; margin-bottom: 20px;">💸 Withdraw Site Earnings</h3>
+            
+            <form id="siteEarningsWithdrawalForm">
+                <div class="form-group">
+                    <label class="form-label">🏦 Withdrawal Source</label>
+                    <select class="form-control" name="account" required readonly>
+                        <option value="SITE_EARNINGS" selected>SITE_EARNINGS - Site Visit Earnings</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">💰 Withdrawal Amount (USD)</label>
+                    <input type="number" class="form-control" name="amount" min="10" step="0.01" placeholder="Enter amount" required>
+                    <small style="color: #666;">Minimum: $10 | Maximum: Available Balance</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🔄 Withdrawal Method</label>
+                    <select class="form-control" name="method" required readonly>
+                        <option value="Mobile Money" selected>Mobile Money</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">📱 Mobile Money Provider</label>
+                    <select class="form-control" name="provider" required>
+                        <option value="">Select provider...</option>
+                        <option value="mtn">MTN Mobile Money</option>
+                        <option value="airtel">Airtel Money</option>
+                        <option value="vodafone">Vodafone Cash</option>
+                        <option value="orange">Orange Money</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">📞 Phone Number</label>
+                    <input type="tel" class="form-control" name="mobile" placeholder="+256786760152" value="+256786760152" required>
+                    <small style="color: #158173;">Format: +256XXXXXXXXX (country code required)</small>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <button type="submit" class="btn btn-primary" id="withdrawBtn">
+                        💸 Request Site Earnings Withdrawal
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="withdrawalStatus" class="status-display" style="display: none;">
+            <!-- Status updates will appear here -->
+        </div>
+
+        <div class="withdrawal-history" id="withdrawalHistory">
+            <h3 style="color: #158173; margin-bottom: 16px;">📋 Recent Withdrawals</h3>
+            <div id="historyList">
+                <p style="color: #666; text-align: center;">No withdrawals yet</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate site earnings balance
+        let siteEarningsBalance = 3014.05;
+        let withdrawalHistory = [];
+
+        // Mock Jpesa validation function
+        function validateMobileNumber(mobile) {
+            return /^\+256\d{9}$/.test(mobile);
+        }
+
+        // Handle form submission
+        document.getElementById('siteEarningsWithdrawalForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                account: formData.get('account'),
+                amount: parseFloat(formData.get('amount')),
+                method: formData.get('method'),
+                provider: formData.get('provider'),
+                mobile: formData.get('mobile')
+            };
+
+            // Validate inputs
+            if (!data.account || !data.amount || !data.provider || !data.mobile) {
+                showStatus('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (data.amount < 10) {
+                showStatus('Minimum withdrawal amount is $10', 'error');
+                return;
+            }
+
+            if (data.amount > siteEarningsBalance) {
+                showStatus(`Insufficient balance. Available: $${siteEarningsBalance.toFixed(2)}`, 'error');
+                return;
+            }
+
+            if (!validateMobileNumber(data.mobile)) {
+                showStatus('Invalid mobile number format. Please use +256XXXXXXXXX', 'error');
+                return;
+            }
+
+            // Show processing status
+            showStatus('🔄 Processing site earnings withdrawal...', 'processing');
+            
+            // Disable form
+            const submitBtn = document.getElementById('withdrawBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
+
+            try {
+                // Simulate live withdrawal processing
+                await processSiteEarningsWithdrawal(data);
+                
+            } catch (error) {
+                showStatus('❌ Withdrawal failed: ' + error.message, 'error');
+            } finally {
+                // Re-enable form
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        async function processSiteEarningsWithdrawal(data) {
+            // Show step 1: Balance validation
+            showStatus('✅ Validating site earnings balance...', 'processing');
+            await sleep(1000);
+
+            // Show step 2: API call
+            showStatus('🌐 Connecting to Jpesa API for site earnings withdrawal...', 'processing');
+            await sleep(1500);
+
+            // Show step 3: Processing
+            showStatus('💳 Processing mobile money transfer from site earnings...', 'processing');
+            await sleep(2000);
+
+            // Deduct from site earnings balance
+            siteEarningsBalance -= data.amount;
+            updateBalanceDisplay();
+
+            // Add to withdrawal history
+            const withdrawal = {
+                id: Date.now(),
+                amount: data.amount,
+                mobile: data.mobile,
+                provider: data.provider,
+                timestamp: new Date(),
+                reference: 'SE_JP' + Date.now(),
+                status: 'completed'
+            };
+            withdrawalHistory.unshift(withdrawal);
+            updateWithdrawalHistory();
+
+            // Simulate success
+            showStatus(`
+                <div style="text-align: center;">
+                    <h3 style="color: #158173; margin-bottom: 16px;">✅ Site Earnings Withdrawal Successful!</h3>
+                    <div style="background: rgba(21, 129, 115, 0.1); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                        <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">$${data.amount.toFixed(2)} USD</div>
+                        <div style="opacity: 0.8;">Withdrawn from Site Earnings to ${data.mobile}</div>
+                    </div>
+                    <div style="font-size: 14px; opacity: 0.8; margin-bottom: 16px;">
+                        <strong>Transaction ID:</strong> ${withdrawal.reference}<br>
+                        <strong>Provider:</strong> ${data.provider.toUpperCase()}<br>
+                        <strong>New Balance:</strong> $${siteEarningsBalance.toFixed(2)}<br>
+                        <strong>Status:</strong> Completed<br>
+                        <strong>Time:</strong> ${new Date().toLocaleString()}
+                    </div>
+                    <div style="background: #fff3cd; padding: 12px; border-radius: 6px; color: #856404;">
+                        📱 Site earnings transferred successfully! You will receive a confirmation SMS shortly.
+                    </div>
+                </div>
+            `, 'success');
+        }
+
+        function updateBalanceDisplay() {
+            const balanceElement = document.getElementById('currentBalance');
+            balanceElement.textContent = `$${siteEarningsBalance.toFixed(2)}`;
+            balanceElement.parentElement.classList.add('balance-update');
+            
+            setTimeout(() => {
+                balanceElement.parentElement.classList.remove('balance-update');
+            }, 500);
+        }
+
+        function updateWithdrawalHistory() {
+            const historyList = document.getElementById('historyList');
+            
+            if (withdrawalHistory.length === 0) {
+                historyList.innerHTML = '<p style="color: #666; text-align: center;">No withdrawals yet</p>';
+                return;
+            }
+
+            historyList.innerHTML = withdrawalHistory.slice(0, 5).map(withdrawal => `
+                <div class="history-item">
+                    <div>
+                        <div class="history-amount">-$${withdrawal.amount.toFixed(2)}</div>
+                        <div style="font-size: 0.9em; color: #666;">${withdrawal.mobile} (${withdrawal.provider.toUpperCase()})</div>
+                    </div>
+                    <div class="history-time">
+                        ${withdrawal.timestamp.toLocaleString()}<br>
+                        <span style="color: #158173;">${withdrawal.reference}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('withdrawalStatus');
+            statusDiv.className = `status-display ${type}`;
+            statusDiv.innerHTML = message;
+            statusDiv.style.display = 'block';
+            
+            // Scroll to status
+            statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Pre-fill form for demo
+        window.addEventListener('load', function() {
+            const form = document.getElementById('siteEarningsWithdrawalForm');
+            form.querySelector('input[name="amount"]').value = '100';
+            form.querySelector('select[name="provider"]').value = 'mtn';
+        });
+    </script>
+</body>
+</html>

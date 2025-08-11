@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Context-Sensitive Authentication Test</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/modals.css">
+    <style>
+        .test-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .test-controls h3 {
+            margin: 0 0 15px 0;
+            color: #158173;
+        }
+        
+        .test-controls button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: #158173;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .test-controls button:hover {
+            background: #0f5d56;
+        }
+        
+        .test-controls .clear-btn {
+            background: #dc3545;
+        }
+        
+        .test-controls .clear-btn:hover {
+            background: #c82333;
+        }
+        
+        .context-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-controls">
+        <h3>Auth Context Test</h3>
+        <div class="context-info" id="contextInfo">
+            Current Context: <span id="currentContext">new</span>
+        </div>
+        
+        <button onclick="testNewUser()">Test New User</button>
+        <button onclick="testReturningUser()">Test Returning User</button>
+        <button onclick="testReturningAdmin()">Test Returning Admin</button>
+        <button onclick="testLoggedOut()">Test Logged Out</button>
+        <button class="clear-btn" onclick="clearStorage()">Clear Storage</button>
+    </div>
+
+    <div id="pageContent">
+        <div style="padding: 50px; text-align: center;">
+            <h1>Context-Sensitive Authentication Test</h1>
+            <p>Use the controls in the top-right to test different user contexts.</p>
+        </div>
+    </div>
+
+    <script>
+        // Mock Modal class for testing
+        class Modal {
+            constructor(id, title, content) {
+                this.id = id;
+                this.title = title;
+                this.content = content;
+                this.modal = this.create();
+                document.body.appendChild(this.modal);
+            }
+
+            create() {
+                const overlay = document.createElement('div');
+                overlay.className = 'modal-overlay';
+                overlay.innerHTML = `
+                    <div class="modal-container">
+                        <div class="modal-header">
+                            <h3>${this.title}</h3>
+                            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
+                        </div>
+                        <div class="modal-content">
+                            ${this.content}
+                        </div>
+                    </div>
+                `;
+                return overlay;
+            }
+        }
+
+        // Mock App with context-sensitive auth methods
+        class TestApp {
+            showLoginRequiredScreen(userContext = 'new') {
+                const context = this.determineUserContext(userContext);
+                document.getElementById('currentContext').textContent = context;
+                
+                const pageContent = document.getElementById('pageContent');
+                if (pageContent) {
+                    pageContent.innerHTML = this.generateLoginScreenHTML(context);
+                }
+            }
+
+            determineUserContext(providedContext) {
+                const lastUser = JSON.parse(localStorage.getItem('lastUser') || '{}');
+                const wasLoggedOut = localStorage.getItem('wasLoggedOut') === 'true';
+                
+                if (providedContext === 'logged_out' || wasLoggedOut) {
+                    if (lastUser.role === 'admin') {
+                        return 'returning_admin';
+                    } else if (lastUser.id) {
+                        return 'returning_user';
+                    }
+                    return 'logged_out';
+                }
+                
+                if (lastUser.id) {
+                    if (lastUser.role === 'admin') {
+                        return 'returning_admin';
+                    } else {
+                        return 'returning_user';
+                    }
+                }
+                
+                return 'new';
+            }
+
+            generateLoginScreenHTML(context) {
+                const isNewUser = context === 'new';
+                const isReturningUser = context === 'returning_user';
+                const isReturningAdmin = context === 'returning_admin';
+                const wasLoggedOut = context === 'logged_out';
+                
+                let welcomeMessage = 'Welcome to Blue Traders';
+                let subtitle = 'Please sign in to access your trading account';
+                
+                if (isReturningUser) {
+                    welcomeMessage = 'Welcome Back!';
+                    subtitle = 'Sign in to continue trading';
+                } else if (isReturningAdmin) {
+                    welcomeMessage = 'Welcome Back, Administrator';
+                    subtitle = 'Sign in to access your admin dashboard';
+                } else if (wasLoggedOut) {
+                    welcomeMessage = 'Session Ended';
+                    subtitle = 'Please sign in again to continue';
+                }
+
+                return `
+                    <div class="login-required-screen">
+                        <div class="login-required-container">
+                            <div class="login-required-header">
+                                <h2>${welcomeMessage}</h2>
+                                <p class="subtitle">${subtitle}</p>
+                                <div class="context-badge" style="background: #e3f2fd; color: #1976d2; padding: 8px 16px; border-radius: 20px; font-size: 14px; margin: 10px 0;">
+                                    Context: ${context}
+                                </div>
+                            </div>
+
+                            <div class="login-required-content">
+                                ${this.generateBenefitsSection(context)}
+                                ${this.generateLoginActions(context)}
+                                ${this.generateDemoSection(context)}
+                            </div>
+
+                            <div class="security-notice">
+                                <p>🔒 Your data is protected with enterprise-grade security</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            generateBenefitsSection(context) {
+                const isNewUser = context === 'new';
+                const isReturningAdmin = context === 'returning_admin';
+                
+                if (isNewUser) {
+                    return `
+                        <div class="auth-benefits">
+                            <h3>🚀 Access Your Trading Platform</h3>
+                            <div class="benefits-grid">
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">💰</span>
+                                    <div class="benefit-text">
+                                        <h4>Trading & Earnings</h4>
+                                        <p>Access your trading accounts and site visit earnings</p>
+                                    </div>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">🏦</span>
+                                    <div class="benefit-text">
+                                        <h4>Deposits & Withdrawals</h4>
+                                        <p>Manage your funds with secure transactions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else if (isReturningAdmin) {
+                    return `
+                        <div class="auth-benefits">
+                            <h3>🏛️ Administrator Access</h3>
+                            <div class="benefits-grid">
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">👥</span>
+                                    <div class="benefit-text">
+                                        <h4>User Management</h4>
+                                        <p>Manage user accounts and permissions</p>
+                                    </div>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">💸</span>
+                                    <div class="benefit-text">
+                                        <h4>Transaction Oversight</h4>
+                                        <p>Monitor and manage all platform transactions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="auth-benefits">
+                            <h3>💼 Your Trading Dashboard</h3>
+                            <div class="benefits-grid">
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">📈</span>
+                                    <div class="benefit-text">
+                                        <h4>Continue Trading</h4>
+                                        <p>Resume your trading activities and monitor positions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            generateLoginActions(context) {
+                const isNewUser = context === 'new';
+                const isReturningUser = context === 'returning_user';
+                const isReturningAdmin = context === 'returning_admin';
+                
+                if (isNewUser) {
+                    return `
+                        <div class="login-actions">
+                            <button class="btn btn-secondary btn-large" onclick="alert('Show Signup Modal')">
+                                Create Your Account
+                            </button>
+                            <button class="btn btn-primary btn-large" onclick="alert('Show Login Modal')">
+                                Already Have Account? Sign In
+                            </button>
+                        </div>
+                    `;
+                } else if (isReturningAdmin) {
+                    return `
+                        <div class="login-actions">
+                            <button class="btn btn-primary btn-large admin-login" onclick="alert('Show Admin Login Modal')">
+                                Admin Sign In
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="login-actions">
+                            <button class="btn btn-primary btn-large" onclick="alert('Show User Login Modal')">
+                                Sign In to Continue
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+
+            generateDemoSection(context) {
+                const isNewUser = context === 'new';
+                const isReturningAdmin = context === 'returning_admin';
+                
+                if (isNewUser) {
+                    return `
+                        <div class="demo-access">
+                            <p><strong>Try Demo First:</strong></p>
+                            <div class="demo-buttons">
+                                <button class="btn btn-demo" onclick="alert('Demo User Login')">
+                                    👤 Demo User Account
+                                </button>
+                            </div>
+                            <small>Perfect for exploring the platform features</small>
+                        </div>
+                    `;
+                } else if (isReturningAdmin) {
+                    return `
+                        <div class="demo-access">
+                            <p><strong>Development Access:</strong></p>
+                            <div class="demo-buttons">
+                                <button class="btn btn-demo admin" onclick="alert('Demo Admin Login')">
+                                    🏛️ Demo Admin Access
+                                </button>
+                            </div>
+                            <small>For testing administrative features</small>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="demo-access">
+                            <p><strong>Demo Access:</strong></p>
+                            <div class="demo-buttons">
+                                <button class="btn btn-demo" onclick="alert('Demo Login')">
+                                    👤 Demo Login
+                                </button>
+                            </div>
+                            <small>Test the platform features</small>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Initialize test app
+        const testApp = new TestApp();
+        window.testApp = testApp;
+
+        // Test functions
+        function testNewUser() {
+            clearStorage();
+            testApp.showLoginRequiredScreen('new');
+        }
+
+        function testReturningUser() {
+            localStorage.setItem('lastUser', JSON.stringify({
+                id: 'user123',
+                email: 'john@example.com',
+                role: 'user'
+            }));
+            testApp.showLoginRequiredScreen();
+        }
+
+        function testReturningAdmin() {
+            localStorage.setItem('lastUser', JSON.stringify({
+                id: 'admin123',
+                email: 'admin@thebluetraders.com',
+                role: 'admin'
+            }));
+            testApp.showLoginRequiredScreen();
+        }
+
+        function testLoggedOut() {
+            localStorage.setItem('lastUser', JSON.stringify({
+                id: 'user123',
+                email: 'john@example.com',
+                role: 'user'
+            }));
+            localStorage.setItem('wasLoggedOut', 'true');
+            testApp.showLoginRequiredScreen('logged_out');
+        }
+
+        function clearStorage() {
+            localStorage.removeItem('lastUser');
+            localStorage.removeItem('wasLoggedOut');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('authToken');
+        }
+
+        // Start with new user context
+        testNewUser();
+    </script>
+</body>
+</html>

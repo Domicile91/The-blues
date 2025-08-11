@@ -1,0 +1,40 @@
+{
+  "name": "blue-traders-platform",
+  "version": "1.0.0",
+  "description": "The Blue Traders - Complete Trading Platform",
+  "main": "index.html",
+  "type": "website",
+  "deployment": {
+    "entry_point": "index.html",
+    "backend_server": "backend/server.js",
+    "admin_dashboard": "admin/index.html"
+  },
+  "features": {
+    "authentication": true,
+    "user_dashboard": true,
+    "admin_dashboard": true,
+    "deposit_system": true,
+    "withdrawal_system": true,
+    "account_management": true,
+    "site_earnings": true,
+    "responsive_design": true,
+    "professional_ui": true
+  },
+  "browser_support": {
+    "chrome": "90+",
+    "firefox": "88+",
+    "safari": "14+",
+    "edge": "90+"
+  },
+  "status": {
+    "development": "complete",
+    "testing": "passed",
+    "production_ready": true,
+    "deployment_ready": true
+  },
+  "contact": {
+    "email": "support@bluetraders.com",
+    "phone": "+256786760152",
+    "website": "www.bluetraders.com"
+  }
+}

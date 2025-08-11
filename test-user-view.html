@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User View Test - Blue Traders</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="assets/css/modals.css">
+    <link rel="stylesheet" href="assets/css/homepage.css">
+    <style>
+        .test-results {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 300px;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .test-item {
+            margin: 5px 0;
+            padding: 3px 0;
+        }
+        .test-pass { color: #28a745; }
+        .test-fail { color: #dc3545; }
+        .test-pending { color: #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="test-results" id="testResults">
+        <h4>User View Test Results</h4>
+        <div id="testStatus">Running tests...</div>
+    </div>
+
+    <!-- Include main HTML content from index.html -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="assets/images/logo.png" alt="Blue Traders Logo" class="sidebar-logo">
+            <h3>The Blue Trader platforms</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" data-page="home"><span class="icon"></span><span>Home</span></a></li>
+            <li><a href="#" data-page="earnings"><span class="icon"></span><span>Earnings</span></a></li>
+            <li><a href="#" data-page="verify"><span class="icon"></span><span>Verify Account</span></a></li>
+            <li><a href="#" data-page="deposit"><span class="icon"></span><span>Deposit</span></a></li>
+            <li><a href="#" data-page="withdraw"><span class="icon"></span><span>Withdraw</span></a></li>
+            <li><a href="#" data-page="transfer"><span class="icon"></span><span>Transfer Funds</span></a></li>
+            <li><a href="#" data-page="accounts"><span class="icon"></span><span>Accounts</span></a></li>
+            <li><a href="#" data-page="profile"><span class="icon"></span><span>Profile</span></a></li>
+            <li><a href="#" data-page="settings"><span class="icon"></span><span>Settings</span></a></li>
+            <li><a href="#" data-page="promotions"><span class="icon"></span><span>Promotions</span></a></li>
+            <li><a href="#" data-page="refer"><span class="icon"></span><span>Refer a Friend</span></a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <header class="header">
+            <button class="toggle-btn" id="toggleSidebar">&#9776;</button>
+            <div class="logo-container">
+                <img src="assets/images/logo.png" alt="logo" class="logo">
+                <h3>Blue Traders</h3>
+            </div>
+            <div class="view-switcher">
+                <button class="switch-view-btn" id="switchToAdmin">
+                    <span class="icon">⚙️</span> Admin View
+                </button>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" id="authBtn">Login</button>
+                <button class="btn btn-danger logout-btn" id="logoutBtn" style="display: none;">
+                    <span class="icon">🚪</span> Logout
+                </button>
+            </div>
+        </header>
+
+        <main id="mainContent" class="content">
+            <div id="pageContent">
+                <!-- Page content will be loaded here -->
+            </div>
+        </main>
+    </div>
+
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- Test JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testResults = document.getElementById('testStatus');
+            const tests = [];
+
+            function addTest(name, passed, details = '') {
+                tests.push({
+                    name,
+                    passed,
+                    details
+                });
+            }
+
+            function runTests() {
+                // Test 1: Check if app.js loads without errors
+                try {
+                    addTest('app.js loads without syntax errors', true);
+                } catch (e) {
+                    addTest('app.js loads without syntax errors', false, e.message);
+                }
+
+                // Test 2: Check if window.app exists
+                setTimeout(() => {
+                    addTest('window.app object exists', typeof window.app !== 'undefined');
+                    
+                    // Test 3: Check if sidebar navigation works
+                    const sidebarLinks = document.querySelectorAll('.sidebar-menu a[data-page]');
+                    addTest('Sidebar navigation links found', sidebarLinks.length > 0, `Found ${sidebarLinks.length} links`);
+                    
+                    // Test 4: Check if loadPage function exists
+                    if (window.app) {
+                        addTest('loadPage function exists', typeof window.app.loadPage === 'function');
+                        addTest('loadHomePage function exists', typeof window.app.loadHomePage === 'function');
+                        addTest('showAuthModal function exists', typeof window.app.showAuthModal === 'function');
+                    }
+
+                    // Test 5: Try to click a sidebar link
+                    if (sidebarLinks.length > 0) {
+                        try {
+                            sidebarLinks[0].click();
+                            addTest('Sidebar click works', true);
+                        } catch (e) {
+                            addTest('Sidebar click works', false, e.message);
+                        }
+                    }
+
+                    displayResults();
+                }, 1000);
+            }
+
+            function displayResults() {
+                let html = '';
+                tests.forEach(test => {
+                    const status = test.passed ? 'test-pass' : 'test-fail';
+                    const icon = test.passed ? '✅' : '❌';
+                    html += `<div class="test-item ${status}">${icon} ${test.name}`;
+                    if (test.details) html += `<br><small>${test.details}</small>`;
+                    html += `</div>`;
+                });
+                
+                const summary = tests.filter(t => t.passed).length + '/' + tests.length + ' tests passed';
+                testResults.innerHTML = `<strong>${summary}</strong><hr>${html}`;
+            }
+
+            runTests();
+        });
+    </script>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/accounts.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/modals.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/site-earnings.js"></script>
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Requirements Test - Blue Traders</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/modals.css">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .test-header {
+            background: linear-gradient(135deg, #158173, #0d6b6e);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .auth-status.authenticated {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .auth-status.not-authenticated {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .status-indicator.online {
+            background: #28a745;
+        }
+        
+        .status-indicator.offline {
+            background: #dc3545;
+        }
+        
+        .test-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .test-btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .test-btn.protected {
+            background: #e53935;
+        }
+        
+        .test-btn.protected:hover {
+            background: #c62828;
+            transform: translateY(-2px);
+        }
+        
+        .test-btn.public {
+            background: #28a745;
+        }
+        
+        .test-btn.public:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .test-btn.admin {
+            background: #6f42c1;
+        }
+        
+        .test-btn.admin:hover {
+            background: #5a32a3;
+            transform: translateY(-2px);
+        }
+        
+        .auth-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .auth-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-btn.login {
+            background: #007bff;
+            color: white;
+        }
+        
+        .auth-btn.login:hover {
+            background: #0056b3;
+        }
+        
+        .auth-btn.logout {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .auth-btn.logout:hover {
+            background: #c82333;
+        }
+        
+        .auth-btn.admin-login {
+            background: #6f42c1;
+            color: white;
+        }
+        
+        .auth-btn.admin-login:hover {
+            background: #5a32a3;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🔐 Authentication Requirements System</h1>
+            <p>Test the authentication guards and login requirements for protected services</p>
+        </div>
+
+        <div class="test-section">
+            <h2>🟢 Current Authentication Status</h2>
+            <div id="authStatus" class="auth-status not-authenticated">
+                <span class="status-indicator offline"></span>
+                <span>Not Authenticated - Please login to access protected services</span>
+            </div>
+            
+            <div class="auth-controls">
+                <button class="auth-btn login" onclick="testLogin()">Demo User Login</button>
+                <button class="auth-btn admin-login" onclick="testAdminLogin()">Demo Admin Login</button>
+                <button class="auth-btn logout" onclick="testLogout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔒 Protected Services (Require Login)</h2>
+            <p>These services require authentication. If you're not logged in, you'll see a login modal:</p>
+            
+            <div class="test-buttons">
+                <button class="test-btn protected" onclick="testProtectedPage('deposit')">
+                    💰 Deposit Funds
+                </button>
+                <button class="test-btn protected" onclick="testProtectedPage('withdraw')">
+                    💸 Withdraw Funds
+                </button>
+                <button class="test-btn protected" onclick="testProtectedPage('transfer')">
+                    🔄 Transfer Funds
+                </button>
+                <button class="test-btn protected" onclick="testProtectedPage('accounts')">
+                    🏦 View Accounts
+                </button>
+                <button class="test-btn protected" onclick="testProtectedPage('profile')">
+                    👤 User Profile
+                </button>
+                <button class="test-btn protected" onclick="testProtectedPage('settings')">
+                    ⚙️ Settings
+                </button>
+                <button class="test-btn protected" onclick="testProtectedPage('earnings')">
+                    📊 Earnings
+                </button>
+                <button class="test-btn protected" onclick="testProtectedPage('verify')">
+                    ✅ Account Verification
+                </button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🌐 Public Services (No Login Required)</h2>
+            <p>These services are accessible without authentication:</p>
+            
+            <div class="test-buttons">
+                <button class="test-btn public" onclick="testPublicPage('home')">
+                    🏠 Home Page
+                </button>
+                <button class="test-btn public" onclick="testPublicPage('promotions')">
+                    🎉 Promotions
+                </button>
+                <button class="test-btn public" onclick="testPublicPage('refer')">
+                    👥 Refer a Friend
+                </button>
+                <a href="index.html" class="test-btn public">
+                    📱 Main Dashboard
+                </a>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🏛️ Admin Services (Require Admin Login)</h2>
+            <p>These services require administrator authentication:</p>
+            
+            <div class="test-buttons">
+                <a href="admin/index.html" class="test-btn admin">
+                    🏛️ Admin Dashboard
+                </a>
+                <button class="test-btn admin" onclick="testAdminAccess()">
+                    👥 User Management
+                </button>
+                <button class="test-btn admin" onclick="testAdminAccess()">
+                    💰 Site Earnings
+                </button>
+                <button class="test-btn admin" onclick="testAdminAccess()">
+                    📊 Reports & Analytics
+                </button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>✨ Authentication Features</h2>
+            <ul class="feature-list">
+                <li>
+                    <span class="status-indicator online"></span>
+                    <strong>Protected Page Guards:</strong> Automatically require login for sensitive pages
+                </li>
+                <li>
+                    <span class="status-indicator online"></span>
+                    <strong>Sidebar Navigation Guards:</strong> Check authentication before navigating
+                </li>
+                <li>
+                    <span class="status-indicator online"></span>
+                    <strong>Admin Authentication:</strong> Strict admin-only access controls
+                </li>
+                <li>
+                    <span class="status-indicator online"></span>
+                    <strong>Session Persistence:</strong> Remember login state across page reloads
+                </li>
+                <li>
+                    <span class="status-indicator online"></span>
+                    <strong>Clear Logout:</strong> Complete session cleanup on logout
+                </li>
+                <li>
+                    <span class="status-indicator online"></span>
+                    <strong>User-Friendly Modals:</strong> Professional login requirement dialogs
+                </li>
+                <li>
+                    <span class="status-indicator online"></span>
+                    <strong>Demo Authentication:</strong> Easy testing with demo accounts
+                </li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 Implementation Details</h2>
+            
+            <h3>Authentication Guards:</h3>
+            <div class="code-example">
+// Protected page check
+requireAuthentication(action = 'access this service') {
+    if (!this.isAuthenticated()) {
+        this.showLoginRequiredModal(action);
+        return false;
+    }
+    return true;
+}
+
+// Page loading with auth guard
+loadPage(page) {
+    const protectedPages = ['deposit', 'withdraw', 'transfer', 'accounts', 'profile', 'settings', 'earnings', 'verify'];
+    
+    if (protectedPages.includes(page)) {
+        if (!this.requireAuthentication(`access the ${page} page`)) {
+            return; // Stop if authentication fails
+        }
+    }
+    // Continue with page loading...
+}
+            </div>
+            
+            <h3>Admin Access Control:</h3>
+            <div class="code-example">
+// Admin authentication check
+async checkAdminAuth() {
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const adminSession = JSON.parse(localStorage.getItem('adminSession') || '{}');
+    
+    if (!isAuthenticated && !adminSession.userId) {
+        return false;
+    }
+    
+    if (!user || user.role !== 'admin') {
+        return false;
+    }
+    
+    return true;
+}
+            </div>
+        </div>
+    </div>
+
+    <!-- Load the main app to test authentication -->
+    <script src="assets/js/app.js"></script>
+    <script>
+        function updateAuthStatus() {
+            const authStatusEl = document.getElementById('authStatus');
+            const indicator = authStatusEl.querySelector('.status-indicator');
+            
+            // Check if app is loaded and user is authenticated
+            if (window.app && window.app.isAuthenticated()) {
+                const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                authStatusEl.className = 'auth-status authenticated';
+                authStatusEl.innerHTML = `
+                    <span class="status-indicator online"></span>
+                    <span>Authenticated as: ${user.fullName || user.email || 'User'} (${user.role || 'user'})</span>
+                `;
+            } else {
+                authStatusEl.className = 'auth-status not-authenticated';
+                authStatusEl.innerHTML = `
+                    <span class="status-indicator offline"></span>
+                    <span>Not Authenticated - Please login to access protected services</span>
+                `;
+            }
+        }
+
+        function testProtectedPage(page) {
+            if (window.app) {
+                window.app.loadPage(page);
+            } else {
+                alert('App not loaded yet. Please wait and try again.');
+            }
+        }
+
+        function testPublicPage(page) {
+            if (window.app) {
+                window.app.loadPage(page);
+            } else {
+                alert('App not loaded yet. Please wait and try again.');
+            }
+        }
+
+        function testAdminAccess() {
+            window.location.href = 'admin/index.html';
+        }
+
+        function testLogin() {
+            if (window.app) {
+                window.app.demoLogin();
+                setTimeout(updateAuthStatus, 500);
+            } else {
+                alert('App not loaded yet. Please wait and try again.');
+            }
+        }
+
+        function testAdminLogin() {
+            if (window.app) {
+                window.app.demoAdminLogin();
+                setTimeout(updateAuthStatus, 500);
+            } else {
+                alert('App not loaded yet. Please wait and try again.');
+            }
+        }
+
+        function testLogout() {
+            if (window.app) {
+                // Clear authentication data
+                localStorage.removeItem('isAuthenticated');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('adminSession');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                
+                alert('Logged out successfully!');
+                updateAuthStatus();
+            } else {
+                alert('App not loaded yet. Please wait and try again.');
+            }
+        }
+
+        // Update status when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(updateAuthStatus, 1000);
+            
+            // Update status periodically
+            setInterval(updateAuthStatus, 5000);
+        });
+    </script>
+</body>
+</html>

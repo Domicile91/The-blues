@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jpesa Integration Test - Blue Traders</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #158173, #3949ab);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        .btn {
+            background: #158173;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #0f5f56;
+        }
+        
+        .btn.secondary {
+            background: #6b7280;
+        }
+        
+        .btn.secondary:hover {
+            background: #4b5563;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .success { background: #e8f5e8; border: 1px solid #158173; color: #0f5f56; }
+        .error { background: #fef2f2; border: 1px solid #e53935; color: #c53030; }
+        .info { background: #e8f4f8; border: 1px solid #3182ce; color: #2c5282; }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: #158173;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 Jpesa Integration Test</h1>
+            <p>Test live withdrawals and deposits with Jpesa API</p>
+        </div>
+        
+        <div class="content">
+            <!-- API Connection Test -->
+            <div class="test-section">
+                <h3>🔌 API Connection Test</h3>
+                <p>Test the basic Jpesa API integration and configuration.</p>
+                <button class="btn" onclick="testConnection()">Test Connection</button>
+                <div id="connectionResult" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- Mobile Number Validation Test -->
+            <div class="test-section">
+                <h3>📱 Mobile Number Validation</h3>
+                <p>Test mobile number validation for East African numbers.</p>
+                <div class="form-group">
+                    <label>Mobile Number:</label>
+                    <input type="tel" id="testMobile" placeholder="+256786760152" onkeyup="validateMobileReal(this)">
+                    <div id="mobileValidationResult"></div>
+                </div>
+                <button class="btn" onclick="testMobileValidation()">Test All Formats</button>
+                <div id="mobileResult" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- Withdrawal Test -->
+            <div class="test-section">
+                <h3>💸 Withdrawal Test</h3>
+                <p>Test live withdrawal processing via Jpesa API.</p>
+                <div class="form-group">
+                    <label>Amount (USD):</label>
+                    <input type="number" id="withdrawAmount" value="50" min="10" max="1000">
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number:</label>
+                    <input type="tel" id="withdrawMobile" value="+256786760152">
+                </div>
+                <div class="form-group">
+                    <label>Account Number:</label>
+                    <input type="text" id="withdrawAccount" value="BT001">
+                </div>
+                <button class="btn" onclick="testWithdrawal()">Test Withdrawal</button>
+                <div id="withdrawResult" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- Deposit Test -->
+            <div class="test-section">
+                <h3>💳 Deposit Test</h3>
+                <p>Test deposit form generation via Jpesa API.</p>
+                <div class="form-group">
+                    <label>Amount (USD):</label>
+                    <input type="number" id="depositAmount" value="100" min="1" max="10000">
+                </div>
+                <div class="form-group">
+                    <label>Currency:</label>
+                    <select id="depositCurrency">
+                        <option value="USD">USD</option>
+                        <option value="UGX">UGX</option>
+                        <option value="KES">KES</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Account Number:</label>
+                    <input type="text" id="depositAccount" value="BT001">
+                </div>
+                <button class="btn" onclick="testDeposit()">Generate Deposit Form</button>
+                <div id="depositResult" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- Status Check Test -->
+            <div class="test-section">
+                <h3>📊 Transaction Status Check</h3>
+                <p>Check the status of a Jpesa transaction.</p>
+                <div class="form-group">
+                    <label>Transaction ID:</label>
+                    <input type="text" id="statusTransactionId" placeholder="BT1234567890">
+                </div>
+                <button class="btn" onclick="testStatusCheck()">Check Status</button>
+                <div id="statusResult" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- Configuration Info -->
+            <div class="test-section">
+                <h3>⚙️ Configuration</h3>
+                <p>Current Jpesa API configuration:</p>
+                <ul>
+                    <li><strong>API URL:</strong> https://my.jpesa.com/api/</li>
+                    <li><strong>Payment URL:</strong> https://my.jpesa.com/?dad=xp</li>
+                    <li><strong>API Key:</strong> 1CAA352DBC8E8938008D0A8FEEA526A0</li>
+                    <li><strong>Owner ID:</strong> rachael.chemusto</li>
+                    <li><strong>Callback URL:</strong> http://thebluetraders.com/callback.php</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include our Jpesa integration -->
+    <script src="assets/js/jpesa-payments.js"></script>
+    
+    <script>
+        // Set up mock authentication token for testing
+        localStorage.setItem('authToken', 'test-token-123');
+
+        async function testConnection() {
+            const resultDiv = document.getElementById('connectionResult');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Testing connection...';
+
+            try {
+                const result = await jpesaPayments.testIntegration();
+                resultDiv.className = result.success ? 'result success' : 'result error';
+                resultDiv.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Connection failed: ' + error.message;
+            }
+        }
+
+        function validateMobileReal(input) {
+            const isValid = jpesaPayments.validateMobileNumber(input.value);
+            const formatted = jpesaPayments.formatMobileNumber(input.value);
+            const resultDiv = document.getElementById('mobileValidationResult');
+            
+            if (input.value.length === 0) {
+                resultDiv.innerHTML = '';
+                input.style.borderColor = '#e2e8f0';
+            } else if (isValid) {
+                resultDiv.innerHTML = `<span style="color: #158173;">✓ Valid: ${formatted}</span>`;
+                input.style.borderColor = '#158173';
+            } else {
+                resultDiv.innerHTML = `<span style="color: #e53935;">✗ Invalid format</span>`;
+                input.style.borderColor = '#e53935';
+            }
+        }
+
+        function testMobileValidation() {
+            const resultDiv = document.getElementById('mobileResult');
+            resultDiv.style.display = 'block';
+            
+            const testNumbers = [
+                '+256786760152',
+                '256786760152',
+                '0786760152',
+                '+254123456789',
+                '+255987654321',
+                '1234567890',
+                '+1234567890'
+            ];
+            
+            const results = testNumbers.map(number => ({
+                original: number,
+                isValid: jpesaPayments.validateMobileNumber(number),
+                formatted: jpesaPayments.formatMobileNumber(number)
+            }));
+            
+            resultDiv.className = 'result info';
+            resultDiv.textContent = JSON.stringify(results, null, 2);
+        }
+
+        async function testWithdrawal() {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const mobile = document.getElementById('withdrawMobile').value;
+            const account = document.getElementById('withdrawAccount').value;
+            
+            const resultDiv = document.getElementById('withdrawResult');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Processing withdrawal...';
+
+            try {
+                const result = await jpesaPayments.processWithdrawal({
+                    amount: amount,
+                    mobile: mobile,
+                    accountNumber: account,
+                    description: 'Test withdrawal from Blue Traders'
+                });
+
+                resultDiv.className = result.success ? 'result success' : 'result error';
+                resultDiv.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Withdrawal failed: ' + error.message;
+            }
+        }
+
+        async function testDeposit() {
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const currency = document.getElementById('depositCurrency').value;
+            const account = document.getElementById('depositAccount').value;
+            
+            const resultDiv = document.getElementById('depositResult');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Generating deposit form...';
+
+            try {
+                const result = await jpesaPayments.generateDepositForm({
+                    amount: amount,
+                    currency: currency,
+                    accountNumber: account
+                });
+
+                if (result.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <strong>Form Generated Successfully!</strong><br><br>
+                        <strong>Transaction ID:</strong> ${result.data.transactionId}<br>
+                        <strong>Amount:</strong> ${currency} ${amount}<br><br>
+                        <strong>Payment Form:</strong><br>
+                        <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 10px; margin: 10px 0;">
+                            ${result.data.paymentForm}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = JSON.stringify(result, null, 2);
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Deposit form generation failed: ' + error.message;
+            }
+        }
+
+        async function testStatusCheck() {
+            const transactionId = document.getElementById('statusTransactionId').value;
+            
+            if (!transactionId) {
+                alert('Please enter a transaction ID');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('statusResult');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Checking transaction status...';
+
+            try {
+                const result = await jpesaPayments.checkTransactionStatus(transactionId);
+                resultDiv.className = result.success ? 'result success' : 'result error';
+                resultDiv.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Status check failed: ' + error.message;
+            }
+        }
+
+        // Auto-test on page load
+        window.addEventListener('load', () => {
+            console.log('Jpesa Integration Test Page Loaded');
+            console.log('jpesaPayments available:', typeof jpesaPayments !== 'undefined');
+        });
+    </script>
+</body>
+</html>

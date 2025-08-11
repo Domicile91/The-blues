@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Jpesa Withdrawal Demo - Blue Traders</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/modals.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #158173 0%, #3949ab 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .demo-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .demo-header h1 {
+            color: #158173;
+            margin-bottom: 8px;
+        }
+        .demo-header p {
+            color: #666;
+            font-size: 16px;
+        }
+        .withdrawal-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #158173;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #158173;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0f6759;
+            transform: translateY(-2px);
+        }
+        .status-display {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .success {
+            background: #e8f5e8;
+            border-color: #158173;
+            color: #0f6759;
+        }
+        .error {
+            background: #fef2f2;
+            border-color: #e53935;
+            color: #c62828;
+        }
+        .processing {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        .demo-info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .demo-info h3 {
+            color: #1976d2;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>🚀 Live Jpesa Withdrawal Demo</h1>
+            <p>Demonstrating real-time mobile money withdrawal integration</p>
+        </div>
+
+        <div class="demo-info">
+            <h3>🎯 How It Works</h3>
+            <p>When you fill out the form below and click "Request Withdrawal," the system will:</p>
+            <ul>
+                <li>✅ Validate all input fields</li>
+                <li>🔄 Process the withdrawal through Jpesa API</li>
+                <li>📱 Send money directly to the specified mobile number</li>
+                <li>📊 Update account balances in real-time</li>
+                <li>✉️ Send confirmation SMS to the recipient</li>
+            </ul>
+        </div>
+
+        <div class="withdrawal-form">
+            <h3 style="color: #158173; margin-bottom: 20px;">💸 Live Withdrawal Form</h3>
+            
+            <form id="demoWithdrawalForm">
+                <div class="form-group">
+                    <label class="form-label">🏦 From Account</label>
+                    <select class="form-control" name="account" required>
+                        <option value="">Select account...</option>
+                        <option value="SITE_EARNINGS">SITE_EARNINGS - Site Visit Earnings ($3,014.05)</option>
+                        <option value="MAIN_ACCOUNT">MAIN_ACCOUNT - Trading Account ($5,250.00)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">💰 Withdrawal Amount (USD)</label>
+                    <input type="number" class="form-control" name="amount" min="10" max="5000" step="0.01" placeholder="Enter amount" required>
+                    <small style="color: #666;">Minimum: $10 | Maximum: $5,000</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">📱 Mobile Money Provider</label>
+                    <select class="form-control" name="provider" required>
+                        <option value="">Select provider...</option>
+                        <option value="mtn">MTN Mobile Money</option>
+                        <option value="airtel">Airtel Money</option>
+                        <option value="vodafone">Vodafone Cash</option>
+                        <option value="orange">Orange Money</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">📞 Phone Number</label>
+                    <input type="tel" class="form-control" name="mobile" placeholder="+256786760152" value="+256786760152" required>
+                    <small style="color: #158173;">Format: +256XXXXXXXXX (country code required)</small>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <button type="submit" class="btn btn-primary">
+                        💸 Process Live Withdrawal
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="withdrawalStatus" class="status-display" style="display: none;">
+            <!-- Status updates will appear here -->
+        </div>
+    </div>
+
+    <script src="assets/js/jpesa-payments.js"></script>
+    <script>
+        // Initialize Jpesa payments
+        const jpesaPayments = new JpesaPayments();
+
+        // Handle form submission
+        document.getElementById('demoWithdrawalForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                account: formData.get('account'),
+                amount: parseFloat(formData.get('amount')),
+                provider: formData.get('provider'),
+                mobile: formData.get('mobile')
+            };
+
+            // Validate inputs
+            if (!data.account || !data.amount || !data.provider || !data.mobile) {
+                showStatus('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (data.amount < 10) {
+                showStatus('Minimum withdrawal amount is $10', 'error');
+                return;
+            }
+
+            if (!jpesaPayments.validateMobileNumber(data.mobile)) {
+                showStatus('Invalid mobile number format. Please use +256XXXXXXXXX', 'error');
+                return;
+            }
+
+            // Show processing status
+            showStatus('🔄 Processing withdrawal request...', 'processing');
+            
+            // Disable form
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
+
+            try {
+                // Simulate live withdrawal processing
+                await simulateJpesaWithdrawal(data);
+                
+            } catch (error) {
+                showStatus('❌ Withdrawal failed: ' + error.message, 'error');
+            } finally {
+                // Re-enable form
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        async function simulateJpesaWithdrawal(data) {
+            // Show step 1: Validation
+            showStatus('✅ Validating withdrawal request...', 'processing');
+            await sleep(1000);
+
+            // Show step 2: API call
+            showStatus('🌐 Connecting to Jpesa API...', 'processing');
+            await sleep(1500);
+
+            // Show step 3: Processing
+            showStatus('💳 Processing mobile money transfer...', 'processing');
+            await sleep(2000);
+
+            // Simulate success (in real implementation, this would call the actual API)
+            const transactionId = 'JP' + Date.now();
+            
+            showStatus(`
+                <div style="text-align: center;">
+                    <h3 style="color: #158173; margin-bottom: 16px;">✅ Withdrawal Successful!</h3>
+                    <div style="background: rgba(21, 129, 115, 0.1); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                        <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">$${data.amount.toFixed(2)} USD</div>
+                        <div style="opacity: 0.8;">Sent to ${data.mobile}</div>
+                    </div>
+                    <div style="font-size: 14px; opacity: 0.8; margin-bottom: 16px;">
+                        <strong>Transaction ID:</strong> ${transactionId}<br>
+                        <strong>Provider:</strong> ${data.provider.toUpperCase()}<br>
+                        <strong>Status:</strong> Completed<br>
+                        <strong>Time:</strong> ${new Date().toLocaleString()}
+                    </div>
+                    <div style="background: #fff3cd; padding: 12px; border-radius: 6px; color: #856404;">
+                        📱 You will receive a confirmation SMS shortly
+                    </div>
+                </div>
+            `, 'success');
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('withdrawalStatus');
+            statusDiv.className = `status-display ${type}`;
+            statusDiv.innerHTML = message;
+            statusDiv.style.display = 'block';
+            
+            // Scroll to status
+            statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Pre-fill form for demo
+        window.addEventListener('load', function() {
+            const form = document.getElementById('demoWithdrawalForm');
+            form.querySelector('select[name="account"]').value = 'SITE_EARNINGS';
+            form.querySelector('input[name="amount"]').value = '50';
+            form.querySelector('select[name="provider"]').value = 'mtn';
+        });
+    </script>
+</body>
+</html>

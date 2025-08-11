@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Test - Blue Traders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .warning { background: #fff3cd; color: #856404; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .demo-btn { background: #28a745; }
+        .demo-btn:hover { background: #1e7e34; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Blue Traders Deployment Test</h1>
+    <p>This page helps verify that your Netlify deployment is working correctly.</p>
+
+    <div class="test-container">
+        <h3>Environment Detection</h3>
+        <div id="envStatus"></div>
+    </div>
+
+    <div class="test-container">
+        <h3>Backend Availability Check</h3>
+        <div id="backendStatus"></div>
+    </div>
+
+    <div class="test-container">
+        <h3>Error Handling Test</h3>
+        <div id="errorStatus"></div>
+        <button onclick="testErrorHandling()">Test Error Popup</button>
+        <button onclick="testNetworkError()">Test Network Error (Should NOT show popup)</button>
+    </div>
+
+    <div class="test-container">
+        <h3>Quick Access</h3>
+        <button class="demo-btn" onclick="window.location.href='index.html'">Go to Main Platform</button>
+        <button onclick="window.location.href='quick-access.html'">Quick Login Test</button>
+    </div>
+
+    <script>
+        // Test environment detection
+        function testEnvironment() {
+            const isStaticDeployment = window.location.hostname.includes('netlify.app') ||
+                                      window.location.hostname.includes('netlify.com') ||
+                                      window.location.hostname.includes('github.io') ||
+                                      window.location.hostname.includes('vercel.app') ||
+                                      (!window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1'));
+
+            const envDiv = document.getElementById('envStatus');
+            if (isStaticDeployment) {
+                envDiv.innerHTML = '<div class="status success">✅ Static deployment detected correctly</div>';
+            } else {
+                envDiv.innerHTML = '<div class="status info">ℹ️ Local development environment detected</div>';
+            }
+        }
+
+        // Test backend availability
+        function testBackendAvailability() {
+            const backendDiv = document.getElementById('backendStatus');
+            
+            // Simulate the backend check from app.js
+            const isStaticDeployment = window.location.hostname.includes('netlify.app') ||
+                                      window.location.hostname.includes('netlify.com') ||
+                                      window.location.hostname.includes('github.io') ||
+                                      window.location.hostname.includes('vercel.app') ||
+                                      (!window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1'));
+            
+            if (isStaticDeployment) {
+                backendDiv.innerHTML = '<div class="status success">✅ Backend disabled for static deployment (demo mode enabled)</div>';
+            } else {
+                backendDiv.innerHTML = '<div class="status warning">⚠️ Local environment - backend may be available</div>';
+            }
+        }
+
+        // Test error handling
+        function testErrorHandling() {
+            const errorDiv = document.getElementById('errorStatus');
+            try {
+                // This should trigger error handler but not show popup on Netlify
+                throw new Error('Test error for deployment verification');
+            } catch (error) {
+                console.error('Test error:', error);
+                errorDiv.innerHTML = '<div class="status info">ℹ️ Test error thrown - check console. No popup should appear on Netlify.</div>';
+            }
+        }
+
+        function testNetworkError() {
+            const errorDiv = document.getElementById('errorStatus');
+            // Simulate network error that should not show popup
+            fetch('/api/nonexistent-endpoint').catch(error => {
+                console.log('Expected network error:', error);
+                errorDiv.innerHTML = '<div class="status success">✅ Network error handled gracefully (no popup should appear)</div>';
+            });
+        }
+
+        // Run tests on load
+        window.addEventListener('load', () => {
+            testEnvironment();
+            testBackendAvailability();
+        });
+    </script>
+</body>
+</html>

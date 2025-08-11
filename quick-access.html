@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Access - Blue Traders</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/modals.css">
+    <style>
+        .quick-access {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 2px solid #158173;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 400px;
+        }
+        
+        .quick-access h2 {
+            color: #158173;
+            margin-bottom: 10px;
+        }
+        
+        .quick-access p {
+            color: #6c757d;
+            margin-bottom: 25px;
+        }
+        
+        .access-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .access-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .access-btn.primary {
+            background: #158173;
+            color: white;
+        }
+        
+        .access-btn.primary:hover {
+            background: #0f5d56;
+            transform: translateY(-2px);
+        }
+        
+        .access-btn.secondary {
+            background: #f8f9fa;
+            color: #158173;
+            border: 2px solid #158173;
+        }
+        
+        .access-btn.secondary:hover {
+            background: #158173;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .access-btn.admin {
+            background: #3949ab;
+            color: white;
+        }
+        
+        .access-btn.admin:hover {
+            background: #303f9f;
+            transform: translateY(-2px);
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-message.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
+        }
+    </style>
+</head>
+<body>
+    <div class="quick-access">
+        <h2>🚀 Blue Traders Platform</h2>
+        <p>Quick access to your trading dashboard</p>
+        
+        <div class="access-buttons">
+            <button class="access-btn primary" onclick="quickDemoLogin()">
+                👤 Demo User Login
+            </button>
+            
+            <button class="access-btn admin" onclick="quickAdminLogin()">
+                🏛️ Demo Admin Login
+            </button>
+            
+            <a href="index.html" class="access-btn secondary">
+                🔐 Full Login/Signup
+            </a>
+            
+            <a href="admin/index.html" class="access-btn secondary">
+                ⚙️ Admin Dashboard Direct
+            </a>
+        </div>
+        
+        <div id="statusMessage" class="status-message"></div>
+        
+        <div style="margin-top: 20px; font-size: 12px; color: #6c757d;">
+            <p>Demo accounts come with $10,000 virtual balance</p>
+        </div>
+    </div>
+
+    <script>
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${type}`;
+            statusEl.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        function quickDemoLogin() {
+            showStatus('Setting up demo user account...', 'info');
+            
+            const demoUser = {
+                id: 'demo-user-123',
+                email: 'demo@bluetraders.com',
+                fullName: 'Demo User',
+                role: 'user',
+                balance: 10000,
+                accountType: 'Demo',
+                accounts: [
+                    {
+                        id: 'demo-001',
+                        type: 'Demo',
+                        balance: 10000,
+                        currency: 'USD',
+                        status: 'Active'
+                    }
+                ]
+            };
+            
+            // Set authentication data
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('currentUser', JSON.stringify(demoUser));
+            localStorage.setItem('user', JSON.stringify(demoUser));
+            localStorage.setItem('authToken', 'demo-token-' + Date.now());
+            localStorage.setItem('lastUser', JSON.stringify(demoUser));
+            localStorage.removeItem('wasLoggedOut');
+            
+            showStatus('Demo login successful! Redirecting...', 'success');
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+        
+        function quickAdminLogin() {
+            showStatus('Setting up demo admin account...', 'info');
+            
+            const demoAdmin = {
+                id: 'demo-admin-123',
+                email: 'admin@bluetraders.com',
+                fullName: 'Demo Administrator',
+                role: 'admin',
+                permissions: ['user_management', 'financial_oversight', 'system_settings'],
+                balance: 0,
+                accountType: 'Admin'
+            };
+            
+            // Set authentication data
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('currentUser', JSON.stringify(demoAdmin));
+            localStorage.setItem('user', JSON.stringify(demoAdmin));
+            localStorage.setItem('authToken', 'demo-admin-token-' + Date.now());
+            localStorage.setItem('lastUser', JSON.stringify(demoAdmin));
+            localStorage.removeItem('wasLoggedOut');
+            
+            showStatus('Demo admin login successful! Redirecting...', 'success');
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+        
+        // Check current authentication status
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            try {
+                const user = JSON.parse(currentUser);
+                showStatus(`Already logged in as ${user.fullName} (${user.role}). Click links above to access dashboard.`, 'success');
+            } catch (e) {
+                // Ignore parsing errors
+            }
+        }
+    </script>
+</body>
+</html>

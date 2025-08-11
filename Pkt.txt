@@ -1,0 +1,4 @@
+// Find line 791 and replace the real Stripe key with a placeholder
+const stripeKey = 'pk_test_XXXXXXXXXXXXXXXXXXXXXXXX'; // Replace with placeholder
+// or
+const stripeKey = process.env.STRIPE_PUBLIC_KEY; // Use environment variable

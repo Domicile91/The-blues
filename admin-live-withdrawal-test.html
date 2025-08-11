@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Live Withdrawal System Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .test-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .test-section h3 {
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-admin {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-admin:hover {
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+        
+        .test-controls {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .demo-account {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .instructions h4 {
+            margin: 0 0 15px 0;
+            color: #4CAF50;
+        }
+        
+        .instructions ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+        }
+        
+        #pageContent {
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 Admin Live Withdrawal System Test</h1>
+            <p>Test the enhanced admin withdrawal functionality with main system account integration and live simulation</p>
+        </div>
+        
+        <div class="instructions">
+            <h4>📋 Testing Instructions</h4>
+            <ol>
+                <li>Click "Enable Admin Mode" to activate admin privileges</li>
+                <li>The main system account will appear automatically</li>
+                <li>Click "💰 Withdraw All Earnings" in the admin control panel</li>
+                <li>Experience the live withdrawal simulation with real-time processing steps</li>
+                <li>View the main system account balance updates in real-time</li>
+            </ol>
+        </div>
+        
+        <div class="test-sections">
+            <div class="test-section">
+                <h3>🎯 Live Withdrawal Features</h3>
+                <ul class="feature-list">
+                    <li>✅ Main System Account Display</li>
+                    <li>✅ Real-time Balance Updates</li>
+                    <li>✅ Live Processing Simulation</li>
+                    <li>✅ Professional UI/UX</li>
+                    <li>✅ Transaction Confirmations</li>
+                    <li>✅ Admin Security Controls</li>
+                </ul>
+            </div>
+            
+            <div class="test-section">
+                <h3>💰 Main System Account</h3>
+                <div class="demo-account">
+                    <p><strong>Account Type:</strong> Blue Traders Site Earnings Account</p>
+                    <p><strong>Bank:</strong> Blue Traders Financial Services</p>
+                    <p><strong>Features:</strong></p>
+                    <ul>
+                        <li>Auto-generated account number</li>
+                        <li>Live balance tracking</li>
+                        <li>Real-time updates</li>
+                        <li>Detailed account information</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="test-section">
+                <h3>🚀 Live Simulation Steps</h3>
+                <ul class="feature-list">
+                    <li>🔐 Authenticating admin credentials</li>
+                    <li>🏦 Connecting to main system account</li>
+                    <li>💰 Verifying available balance</li>
+                    <li>📋 Processing withdrawal request</li>
+                    <li>🔄 Transferring funds to main system</li>
+                    <li>📊 Updating account balances</li>
+                    <li>✅ Generating transaction receipt</li>
+                    <li>🎉 Completion confirmation</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="test-controls">
+            <button class="btn btn-admin" onclick="enableAdminMode()">🔧 Enable Admin Mode</button>
+            <button class="btn" onclick="resetTestData()">🔄 Reset Test Data</button>
+            <button class="btn" onclick="viewMainAccount()">🏦 View Main Account</button>
+        </div>
+        
+        <!-- Main content area where the site earnings will be loaded -->
+        <div id="pageContent">
+            <div style="text-align: center; padding: 40px; opacity: 0.7;">
+                <h3>Site Visit Earnings Dashboard</h3>
+                <p>Click "Enable Admin Mode" to see the admin controls and main system account</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Site earnings script -->
+    <script src="organized-trading-platform/frontend/assets/js/site-earnings.js"></script>
+    
+    <script>
+        function enableAdminMode() {
+            // Set admin session
+            localStorage.setItem('adminSession', 'true');
+            localStorage.setItem('userRole', 'admin');
+            localStorage.setItem('adminToken', 'test-admin-token');
+            
+            // Initialize site earnings if not already done
+            if (!window.siteEarnings) {
+                window.siteEarnings = new SiteVisitEarnings();
+            } else {
+                // Refresh to show admin controls
+                window.siteEarnings.checkAdminAccess();
+                window.siteEarnings.loadDashboardData();
+            }
+            
+            showNotification('Admin mode enabled! Admin controls are now visible.', 'success');
+        }
+        
+        function resetTestData() {
+            // Reset all test data
+            localStorage.removeItem('siteVisitEarnings');
+            localStorage.removeItem('siteVisitWithdrawals');
+            localStorage.removeItem('mainSystemSiteEarningsAccount');
+            localStorage.removeItem('mainSystemBalance');
+            localStorage.removeItem('pendingWithdrawals');
+            
+            // Reinitialize
+            if (window.siteEarnings) {
+                window.siteEarnings.siteVisitData = {
+                    totalEarnings: 2847.50,
+                    availableForWithdrawal: 2340.75,
+                    systemBalance: 15847.92,
+                    todayVisits: 1247,
+                    earnings: {
+                        daily: 127.30,
+                        weekly: 892.45,
+                        monthly: 2847.50,
+                        yearly: 34169.00
+                    },
+                    withdrawals: []
+                };
+                window.siteEarnings.withdrawalHistory = [];
+                window.siteEarnings.loadDashboardData();
+            }
+            
+            showNotification('Test data reset successfully!', 'success');
+        }
+        
+        function viewMainAccount() {
+            if (window.siteEarnings) {
+                window.siteEarnings.showMainAccountDetails();
+            } else {
+                showNotification('Please enable admin mode first!', 'warning');
+            }
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : type === 'warning' ? '#FF9800' : '#F44336'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                z-index: 10001;
+                font-weight: 600;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Add animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Auto-enable admin mode for testing
+        setTimeout(() => {
+            enableAdminMode();
+        }, 1000);
+    </script>
+</body>
+</html>
